@@ -1,6 +1,8 @@
 import json
 
 from flask import Flask, request, jsonify
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import requests
 from dotenv import load_dotenv
 import os
@@ -18,8 +20,16 @@ try:
 except Exception as e:
     print(f'Error connecting to Redis: {e}')
     redis_client = None
+    
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    storage_uri=REDIS_URL if REDIS_URL else "memory://",
+    default_limits=['100 per day']
+)
 
 @app.route('/weather/<city>', methods=['GET'])
+@limiter.limit("5 per minute")
 def get_weather(city):
     if not WEATHER_API_KEY:
         return jsonify({"error": "Weather API key is not set."}), 500
