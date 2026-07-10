@@ -2,6 +2,8 @@
 
 A simple Flask-based weather API that returns current weather information for a city using the Visual Crossing Weather API.
 
+This project is a solution to the https://roadmap.sh/projects/weather-api-wrapper-service.
+
 ## Features
 
 - Fetches current weather data for any city
